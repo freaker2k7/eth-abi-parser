@@ -17,7 +17,7 @@ print(parser.take_event())
 
 parser = HumanReadableParser('function doTransferOut(address to, uint amount) external returns (bool success)')
 print(parser.take_function())
-# {'type': 'function', 'name': 'doTransferOut', 'inputs': [{'type': 'address', 'name': 'to', 'indexed': False}, {'type': 'uint', 'name': 'amount', 'indexed': False}], 'outputs': [{'type': 'bool', 'name': 'success', 'indexed': False}], 'stateMutability': 'nonpayable'}
+# {'type': 'function', 'name': 'doTransferOut', 'inputs': [{'type': 'address', 'name': 'to'}, {'type': 'uint', 'name': 'amount'}], 'outputs': [{'type': 'bool', 'name': 'success'}], 'stateMutability': 'nonpayable'}
 ```
 
 ## WIP
