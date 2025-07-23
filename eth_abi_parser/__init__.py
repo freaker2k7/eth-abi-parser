@@ -55,6 +55,10 @@ class HumanReadableParser:
     def parse_event(cls, input):
         cls(input).take_event()
 
+    @classmethod
+    def parse_function(cls, input):
+        cls(input).take_function()
+
     def take_event(self):
         name = self.take_identifier('event')
         self.take_exact('(')
