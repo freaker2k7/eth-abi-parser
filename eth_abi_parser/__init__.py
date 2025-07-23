@@ -82,6 +82,7 @@ class HumanReadableParser:
         self.take_exact(')')
 
         state_mutability = 'nonpayable'
+        # NOTE: modifiers will break it, but there's no way to know them.
         while self.lexer.peek_token() in self.VISIBILITY:
             if self.lexer.next_token() == 'payable':
                 state_mutability = 'payable'
