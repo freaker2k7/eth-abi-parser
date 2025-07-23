@@ -14,6 +14,10 @@ from eth_abi_parser import HumanReadableParser
 parser = HumanReadableParser('event TestEvent(uint indexed id, (string, uint16, (uint8, uint8)) value)')
 print(parser.take_event())
 # {'type': 'event', 'name': 'TestEvent', 'anonymous': False, 'inputs': [{'type': 'uint', 'name': 'id', 'indexed': True}, {'type': 'tuple', 'name': 'value', 'indexed': False, 'components': [{'type': 'string'}, {'type': 'uint16'}, {'type': 'tuple', 'components': [{'type': 'uint8'}, {'type': 'uint8'}]}]}]}
+
+parser = HumanReadableParser('function doTransferOut(address to, uint amount) external returns (bool success)')
+print(parser.take_function())
+# {'type': 'function', 'name': 'doTransferOut', 'inputs': [{'type': 'address', 'name': 'to', 'indexed': False}, {'type': 'uint', 'name': 'amount', 'indexed': False}], 'outputs': [{'type': 'bool', 'name': 'success', 'indexed': False}], 'stateMutability': 'nonpayable'}
 ```
 
 ## WIP
