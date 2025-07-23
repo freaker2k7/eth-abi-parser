@@ -35,6 +35,19 @@ class HumanReadableLexer:
 
 
 class HumanReadableParser:
+    VISIBILITY = [
+        'external',
+        'internal',
+        'nonpayable',
+        'override',
+        'payable',
+        'private',
+        'public',
+        'pure',
+        'view',
+        'virtual',
+    ]
+    
     def __init__(self, input):
         self.lexer = HumanReadableLexer(input)
 
@@ -56,6 +69,31 @@ class HumanReadableParser:
             'name': name,
             'anonymous': anonymous,
             'inputs': inputs,
+        }
+
+    def take_function(self):
+        name = self.take_identifier('function')
+        self.take_exact('(')
+        inputs = self.take_event_params()
+        self.take_exact(')')
+
+        state_mutability = 'nonpayable'
+        while self.lexer.peek_token() in self.VISIBILITY:
+            if self.lexer.next_token() == 'payable':
+                state_mutability = 'payable'
+
+        outputs = []
+        if self.lexer.peek_token() == 'returns':
+            self.lexer.next_token()
+            self.take_exact('(')
+            outputs = self.take_event_params()
+            self.take_exact(')')
+        return {
+            'type': 'function',
+            'name': name,
+            'inputs': inputs,
+            'outputs': outputs,
+            'stateMutability': state_mutability,
         }
 
     def take_event_params(self):
