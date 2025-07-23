@@ -47,7 +47,7 @@ class HumanReadableParser:
         'view',
         'virtual',
     ]
-    
+
     def __init__(self, input):
         self.lexer = HumanReadableLexer(input)
 
@@ -74,7 +74,7 @@ class HumanReadableParser:
     def take_function(self):
         name = self.take_identifier('function')
         self.take_exact('(')
-        inputs = self.take_event_params()
+        inputs = self.take_function_params()
         self.take_exact(')')
 
         state_mutability = 'nonpayable'
@@ -86,7 +86,7 @@ class HumanReadableParser:
         if self.lexer.peek_token() == 'returns':
             self.lexer.next_token()
             self.take_exact('(')
-            outputs = self.take_event_params()
+            outputs = self.take_function_params()
             self.take_exact(')')
         return {
             'type': 'function',
@@ -130,6 +130,41 @@ class HumanReadableParser:
             'type': kind,
             'name': name,
             'indexed': indexed,
+        }
+        if isinstance(kind, list):
+            event['type'] = 'tuple'
+            event['components'] = kind
+        return event
+
+    def take_function_params(self):
+        functions = []
+        if self.lexer.peek_token() == ')':
+            return functions
+        while True:
+            functions.append(self.take_function_param())
+            token = self.lexer.peek_token()
+            if token == ')':
+                break
+            elif token == ',':
+                self.lexer.next_token()
+                continue
+            else:
+                raise ValueError(f'Expected "," or ")"; got "{token}"')
+        return functions
+
+    def take_function_param(self):
+        kind = self.take_param()
+        name = ""
+        while True:
+            token = self.lexer.peek_token()
+            if token not in HumanReadableLexer.SYMBOLS:
+                name = token
+                self.lexer.next_token()
+            else:
+                break
+        event = {
+            'type': kind,
+            'name': name,
         }
         if isinstance(kind, list):
             event['type'] = 'tuple'
